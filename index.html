@@ -166,7 +166,7 @@
       <!-- Bloque Resumen Post-Simulacro / Llegada a Zona Segura -->
       <div id="postDrillBanner" class="post-summary-box" style="display:none;">
         <div class="post-summary-text">
-          <strong id="postSummaryTitle">¡Evacuación Completada!</strong>
+          <strong id="postSummaryTitle">¡Evacuación completada!</strong>
           <span id="postSummaryStats">Tiempo: --:-- | Recorrido: 0 m</span>
         </div>
         <div class="post-summary-actions">
@@ -226,38 +226,52 @@
   <div class="modal-backdrop" id="modalLegend">
     <div class="modal-card">
       <div class="modal-header">
-        <h3>Referencias del Mapa</h3>
+        <h3>Referencias del mapa</h3>
         <button class="modal-close" data-close="modalLegend" type="button">✕</button>
       </div>
       <div class="legend-list">
         <div class="legend-row">
           <span class="swatch swatch-evac"></span>
           <div>
-            <strong>Zona a Evacuar (Área Roja)</strong>
-            <p>Sector delimitado del simulacro. Si estás dentro, subí hacia la Zona Segura verde.</p>
+            <strong>Zona a evacuar (área roja)</strong>
+            <p>Sector delimitado del simulacro. Si estás dentro, subí hacia la zona segura verde.</p>
           </div>
         </div>
         <div class="legend-row">
           <span class="swatch swatch-safe-poly"></span>
           <div>
-            <strong>Zona Segura (Área y Línea Verde)</strong>
+            <strong>Zona segura (área y línea verde)</strong>
             <p>Límite seguro del ejercicio. Al ingresar a esta franja verde se detiene tu cronómetro.</p>
           </div>
         </div>
         <div class="legend-row">
           <span class="swatch swatch-via-azul"></span>
           <div>
-            <strong>Vías de Evacuación (Flechas Azules)</strong>
-            <p>Calles prioritarias señalizadas para subir caminando hacia la Zona Segura.</p>
+            <strong>Vías de evacuación (flechas azules)</strong>
+            <p>Calles prioritarias señalizadas para subir caminando hacia la zona segura.</p>
           </div>
         </div>
         <div class="legend-row">
           <span class="swatch swatch-escalera"></span>
           <div>
-            <strong>Escaleras Peatonales</strong>
+            <strong>Escaleras peatonales</strong>
             <p>Pasajes con escalones para ascenso rápido en pendientes.</p>
           </div>
         </div>
+        <div class="legend-row">
+          <span class="swatch swatch-punto-llegada">A</span>
+          <div>
+            <strong>Puntos de llegada</strong>
+            <p>Sitios de encuentro con personal operativo sobre la zona segura.</p>
+          </div>
+        </div>
+        <!-- <div class="legend-row">
+          <span class="swatch swatch-punto-llegada">A</span>
+          <div>
+            <strong>Comando de incidentes</strong>
+            <p>área operativa de gestión y logística del simulacro.</p>
+          </div>
+        </div> -->
         <div class="legend-row">
           <span class="swatch swatch-user-track"></span>
           <div>
@@ -293,10 +307,10 @@
 
       <div class="modal-two-btns">
         <button type="button" class="btn-primary-orange" id="btnShareCert">
-          Compartir en WhatsApp / Redes
+          Compartir en WhatsApp / redes
         </button>
         <button type="button" class="btn-outline-dark" id="btnDownloadCert">
-          Guardar Imagen
+          Guardar imagen
         </button>
       </div>
     </div>
@@ -306,7 +320,7 @@
   <div class="modal-backdrop" id="modalReport">
     <div class="modal-card">
       <div class="modal-header">
-        <h3>Reportar o Comentar</h3>
+        <h3>Reportar o comentar</h3>
         <button class="modal-close" data-close="modalReport" type="button">✕</button>
       </div>
       <form id="reportForm" class="clean-form">
@@ -324,7 +338,7 @@
           <textarea id="repComment" class="input-clean" placeholder="Contanos qué observaste..." required></textarea>
         </div>
 
-        <button type="submit" class="btn-primary-orange">Enviar Reporte</button>
+        <button type="submit" class="btn-primary-orange">Enviar reporte</button>
       </form>
     </div>
   </div>
@@ -333,7 +347,7 @@
   <div class="modal-backdrop" id="modalSos">
     <div class="modal-card">
       <div class="modal-header">
-        <h3>Teléfonos de Emergencia</h3>
+        <h3>Teléfonos de emergencia</h3>
         <button class="modal-close" data-close="modalSos" type="button">✕</button>
       </div>
       <p class="modal-helper">Tocá para llamar directamente desde tu teléfono:</p>
@@ -354,11 +368,11 @@
   <div class="modal-backdrop" id="modalPrivacyConsent">
     <div class="modal-card">
       <div class="modal-header">
-        <h3>📍 Uso de Ubicación (GPS)</h3>
+        <h3>📍 Uso de ubicación (GPS)</h3>
         <button class="modal-close" data-close="modalPrivacyConsent" type="button">✕</button>
       </div>
       <p class="modal-helper" style="line-height: 1.45; color: var(--tdf-charcoal);">
-        Para indicarte si estás en la <strong>Zona a Evacuar</strong>, ubicarte respecto a la <strong>Zona Segura</strong> y medir los tiempos de respuesta del ejercicio, esta aplicación procesa la ubicación GPS de tu dispositivo de forma <strong>anónima y con fines exclusivamente estadísticos y preventivos</strong> (Ley Nacional N° 25.326 de Protección de Datos Personales).
+        Para indicarte si estás en la <strong>zona a evacuar</strong>, ubicarte respecto a la <strong>zona segura</strong> y medir los tiempos de respuesta del ejercicio, esta aplicación procesa la ubicación GPS de tu dispositivo de forma <strong>anónima y con fines exclusivamente estadísticos y preventivos</strong> (Ley Nacional N° 25.326 de Protección de Datos Personales).
       </p>
       <div class="modal-two-btns">
         <button type="button" class="btn-primary-orange" id="btnAcceptPrivacyGps">
@@ -376,7 +390,7 @@
     <div class="drill-alert-card" role="alertdialog" aria-modal="true" aria-labelledby="drillAlertTitle">
       <div class="drill-alert-icon" aria-hidden="true">🚨</div>
       <h2 id="drillAlertTitle">SIMULACRO EN CURSO</h2>
-      <p>Dirigite hacia la Zona Segura verde utilizando las vías de evacuación señalizadas (flechas azules).</p>
+      <p>Dirigite hacia la zona segura verde utilizando las vías de evacuación señalizadas (flechas azules).</p>
       <p class="drill-alert-note">Seguí las indicaciones del personal operativo.</p>
       <button type="button" class="btn-primary-orange" id="btnDrillAlertOk">Entendido</button>
     </div>

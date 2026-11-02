@@ -1,0 +1,20 @@
+{
+"type": "FeatureCollection",
+"name": "puntos_llegada",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{"type":"Feature","properties":{"id":1,"nombre":"A"},"geometry":{"type":"MultiPoint","coordinates":[[-68.333219828809547,-54.817403322770765]]}},
+{"type":"Feature","properties":{"id":2,"nombre":"B"},"geometry":{"type":"MultiPoint","coordinates":[[-68.330801022217912,-54.81703993297603]]}},
+{"type":"Feature","properties":{"id":4,"nombre":"D"},"geometry":{"type":"MultiPoint","coordinates":[[-68.330250285731253,-54.812012981125079]]}},
+{"type":"Feature","properties":{"id":5,"nombre":"E"},"geometry":{"type":"MultiPoint","coordinates":[[-68.325844173266617,-54.810801715349562]]}},
+{"type":"Feature","properties":{"id":6,"nombre":"F"},"geometry":{"type":"MultiPoint","coordinates":[[-68.323658319480856,-54.809439113524888]]}},
+{"type":"Feature","properties":{"id":7,"nombre":"G"},"geometry":{"type":"MultiPoint","coordinates":[[-68.319626864083773,-54.808306666450143]]}},
+{"type":"Feature","properties":{"id":8,"nombre":"H"},"geometry":{"type":"MultiPoint","coordinates":[[-68.315623544236033,-54.807295323491893]]}},
+{"type":"Feature","properties":{"id":9,"nombre":"I"},"geometry":{"type":"MultiPoint","coordinates":[[-68.311601316171462,-54.806276992778805]]}},
+{"type":"Feature","properties":{"id":10,"nombre":"J"},"geometry":{"type":"MultiPoint","coordinates":[[-68.310268394055754,-54.805939488520082]]}},
+{"type":"Feature","properties":{"id":11,"nombre":"K"},"geometry":{"type":"MultiPoint","coordinates":[[-68.308924448436528,-54.805599305580103]]}},
+{"type":"Feature","properties":{"id":12,"nombre":"L"},"geometry":{"type":"MultiPoint","coordinates":[[-68.307588616538908,-54.805260890739817]]}},
+{"type":"Feature","properties":{"id":3,"nombre":"C"},"geometry":{"type":"MultiPoint","coordinates":[[-68.332206980909959,-54.813879515899522]]}},
+{"type":"Feature","properties":{"id":null,"nombre":"M"},"geometry":{"type":"MultiPoint","coordinates":[[-68.306253718945527,-54.804922277561943]]}}
+]
+}

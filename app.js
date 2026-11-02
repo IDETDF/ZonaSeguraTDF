@@ -134,7 +134,7 @@ function updateCertificateButtonStateUI() {
   } else {
     btnCert.classList.add('is-locked');
     titleCert.textContent = '🔒 Certificado';
-    subCert.textContent   = 'Al llegar a zona segura>';
+    subCert.textContent   = 'Al llegar a zona segura';
   }
 }
 
@@ -161,6 +161,10 @@ const mapStyle = {
     zona_segura_source: {
       type: "geojson",
       data: "./zona_segura.geojson"
+    },
+    puntos_llegada_source: {
+      type: "geojson",
+      data: "./puntos_llegada.geojson"
     },
     recorrido_usuario_source: {
       type: "geojson",
@@ -405,6 +409,42 @@ const mapStyle = {
         "text-color": "#0f172a",
         "text-halo-color": "#ffffff",
         "text-halo-width": 2.2
+      }
+    },
+    // Puntos de Llegada: Círculo azul y etiqueta interna con el campo "nombre"
+    {
+      id: "puntos-llegada-circle",
+      source: "puntos_llegada_source",
+      type: "circle",
+      layout: {
+        "visibility": "visible"
+      },
+      paint: {
+        "circle-color": "#1a23de",
+        "circle-radius": 10,
+        "circle-stroke-color": "#ffffff",
+        "circle-stroke-width": 2
+      }
+    },
+    {
+      id: "puntos-llegada-text",
+      source: "puntos_llegada_source",
+      type: "symbol",
+      layout: {
+        "visibility": "visible",
+        "text-field": ["coalesce", ["get", "nombre"], ["get", "nam"], ["get", "etiqueta"], ""],
+        "text-font": ["Open Sans Regular", "Arial Unicode MS Regular"],
+        "text-size": 10,
+        "text-max-width": 7,
+        "text-line-height": 1.1,
+        "text-anchor": "center",
+        "text-allow-overlap": true,
+        "text-ignore-placement": true
+      },
+      paint: {
+        "text-color": "#ffffff",
+        "text-halo-color": "#ffffff",
+        "text-halo-width": 1.0
       }
     }
   ]

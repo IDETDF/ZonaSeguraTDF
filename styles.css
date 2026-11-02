@@ -865,6 +865,23 @@ a.card-action {
   margin-top: 3px;
 }
 
+.swatch-punto-llegada {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #1a23de;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 4px rgba(6, 35, 56, 0.35);
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2px 5px 0 5px;
+}
+
 .swatch-evac {
   background: rgba(230, 0, 0, 0.35);
   border: 2px dashed #ffffff;
