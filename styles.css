@@ -233,6 +233,74 @@ html, body {
 }
 
 /* ==========================================================================
+   1b. CABECERA: TÍTULO IZQUIERDA / LOGOS Y SILENCIAR DERECHA
+   ========================================================================== */
+.tdf-header-inner {
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.tdf-brand {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.tdf-brand-titles {
+  min-width: 0;
+}
+
+.tdf-zona-title {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.92rem;
+  font-weight: 900;
+  color: var(--tdf-navy);
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tdf-header-right {
+  gap: 7px;
+}
+
+.gob-logo {
+  height: 34px;
+  width: auto;
+  max-width: none;
+  display: block;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.gob-logo.is-compact {
+  height: 34px;
+  width: 34px;
+}
+
+.idetdf-nav-logo {
+  height: 34px;
+  width: auto;
+  max-width: none;
+}
+
+.btn-mute-alarm {
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding: 5px 8px;
+  font-size: 0.7rem;
+}
+
+.tdf-header-inner.mute-compact .btn-mute-text {
+  display: none;
+}
+
+.tdf-header-inner.mute-compact .btn-mute-alarm {
+  padding: 6px 8px;
+}
+
+/* ==========================================================================
    2. CONTADOR CON OLA ANIMADA
    ========================================================================== */
 .stage-stack-pad {
@@ -1198,4 +1266,20 @@ textarea.input-clean {
 @keyframes drillPulse {
   0%, 100% { transform: scale(1); }
   50%      { transform: scale(1.02); }
+}
+
+/* Estado Cancelado en el Banner Superior y Panel Admin */
+.stage-pill.stage-canceled {
+  background: #334155;
+  border-bottom-color: var(--tdf-coral);
+}
+
+.stage-pill.stage-canceled .wave-progress-track {
+  display: none;
+}
+
+.admin-btn-cancel {
+  background: #334155 !important;
+  color: var(--tdf-white) !important;
+  border-color: #1e293b !important;
 }

@@ -496,57 +496,57 @@ async function loadZonaSeguraGeoJsonIntoRAM() {
 
 let idleCaptureTimeout = null;
 
-function captureVectorFeaturesIntoRAM() {
-  if (!map.isStyleLoaded()) return;
+function captureEvacPolygonIntoRAM() {
+  if (!map.isStyleLoaded() || appState.evacPolygonsRAM.length > 0) return;
 
-  if (appState.evacPolygonsRAM.length === 0) {
-    const rawEvac = map.querySourceFeatures('operativas_source', { sourceLayer: 'poligono_simulacrogeojson' }) || [];
-    if (rawEvac.length > 0) {
-      appState.evacPolygonsRAM = rawEvac
-        .filter(f => f.geometry)
-        .map(f => ({ type: 'Feature', geometry: f.geometry, properties: f.properties || {} }));
-      try { localStorage.setItem('dgot_ram_evac', JSON.stringify(appState.evacPolygonsRAM)); } catch (_) {}
-    }
-  }
-
-  const rawStreets = map.querySourceFeatures('operativas_source', { sourceLayer: 'callesgeojson' }) || [];
-  if (rawStreets.length > 0 && appState.streetsIndexRAM.length < 150) {
-    const byName = new Map();
-    for (const st of rawStreets) {
-      const name = (st.properties?.nam || st.properties?.fna || '').trim();
-      if (!name || byName.has(name.toUpperCase())) continue;
-      let samplePt = null;
-      if (st.geometry?.type === 'LineString' && st.geometry.coordinates.length > 0) {
-        samplePt = st.geometry.coordinates[Math.floor(st.geometry.coordinates.length / 2)];
-      } else if (st.geometry?.type === 'MultiLineString' && st.geometry.coordinates[0]?.length > 0) {
-        const seg = st.geometry.coordinates[0];
-        samplePt = seg[Math.floor(seg.length / 2)];
-      }
-      if (samplePt) {
-        byName.set(name.toUpperCase(), { name, coords: [Number(samplePt[0].toFixed(5)), Number(samplePt[1].toFixed(5))] });
-      }
-    }
-    appState.streetsIndexRAM = Array.from(byName.values()).sort((a, b) => a.name.localeCompare(b.name));
-  }
-
-  if (
-    appState.evacPolygonsRAM.length > 0 &&
-    appState.streetsIndexRAM.length > 20
-  ) {
+  const rawEvac = map.querySourceFeatures('operativas_source', { sourceLayer: 'poligono_simulacrogeojson' }) || [];
+  if (rawEvac.length > 0) {
+    appState.evacPolygonsRAM = rawEvac
+      .filter(f => f.geometry)
+      .map(f => ({ type: 'Feature', geometry: f.geometry, properties: f.properties || {} }));
+    try { localStorage.setItem('dgot_ram_evac', JSON.stringify(appState.evacPolygonsRAM)); } catch (_) {}
     map.off('idle', debouncedCaptureRAM);
   }
 }
 
+function captureStreetsIntoRAM() {
+  if (!map.isStyleLoaded() || appState.streetsIndexRAM.length >= 150) return;
+
+  const rawStreets = map.querySourceFeatures('operativas_source', { sourceLayer: 'callesgeojson' }) || [];
+  if (rawStreets.length === 0) return;
+
+  const byName = new Map();
+  for (const st of rawStreets) {
+    const name = (st.properties?.nam || st.properties?.fna || '').trim();
+    if (!name || byName.has(name.toUpperCase())) continue;
+    let samplePt = null;
+    if (st.geometry?.type === 'LineString' && st.geometry.coordinates.length > 0) {
+      samplePt = st.geometry.coordinates[Math.floor(st.geometry.coordinates.length / 2)];
+    } else if (st.geometry?.type === 'MultiLineString' && st.geometry.coordinates[0]?.length > 0) {
+      const seg = st.geometry.coordinates[0];
+      samplePt = seg[Math.floor(seg.length / 2)];
+    }
+    if (samplePt) {
+      byName.set(name.toUpperCase(), { name, coords: [Number(samplePt[0].toFixed(5)), Number(samplePt[1].toFixed(5))] });
+    }
+  }
+  appState.streetsIndexRAM = Array.from(byName.values()).sort((a, b) => a.name.localeCompare(b.name));
+}
+
 function debouncedCaptureRAM() {
+  if (appState.evacPolygonsRAM.length > 0) {
+    map.off('idle', debouncedCaptureRAM);
+    return;
+  }
   clearTimeout(idleCaptureTimeout);
-  idleCaptureTimeout = setTimeout(captureVectorFeaturesIntoRAM, 600);
+  idleCaptureTimeout = setTimeout(captureEvacPolygonIntoRAM, 600);
 }
 
 loadZonaSeguraGeoJsonIntoRAM();
 
 map.on('load', () => {
   loadZonaSeguraGeoJsonIntoRAM();
-  captureVectorFeaturesIntoRAM();
+  captureEvacPolygonIntoRAM();
   renderUserWalkedTrackOnMap();
   updateCertificateButtonStateUI();
 });
@@ -810,10 +810,6 @@ function handleGpsUpdate(coords) {
       'Te encontrás fuera de la zona a evacuar y de la zona segura de este simulacro. No se asegura estar en zona segura (todavía no existe información en el sistema al respecto).';
   }
 
-  if (prevSituation && prevSituation !== situation) {
-    enqueueTelemetrySilent(`SITUATION_CHANGE_TO_${situation}`);
-  }
-
   updateCertificateButtonStateUI();
   refreshPostStatsUI();
 }
@@ -1024,6 +1020,7 @@ function triggerEmergencyAlarm() {
 
   document.querySelector('.tdf-header')?.classList.add('alarm-active');
   document.getElementById('btnMuteAlarm').classList.add('visible');
+  fitMuteButtonLabel();
   safeVibrate([500, 250, 500, 250, 800]);
 
   if (!appState.userHasInteracted && !(navigator.userActivation && navigator.userActivation.hasBeenActive)) {
@@ -1090,7 +1087,6 @@ function startEvacuationStopwatch() {
   if (!appState.stopwatchStartMs) {
     appState.stopwatchStartMs = computeEvacStartMs(Date.now());
     localStorage.setItem('dgot_evac_start_ms', appState.stopwatchStartMs.toString());
-    enqueueTelemetrySilent('EVACUATION_STARTED');
   }
   appState.stopwatchRunning = true;
 }
@@ -1185,6 +1181,7 @@ function tickApplicationClock() {
   const prevStage = appState.currentStage;
   const stage = resolveCurrentStage(now);
   appState.currentStage = stage;
+  setGovLogoCompact(stage === 'DURANTE_SIMULACRO');
 
   updateWaveProgress20Days(now);
 
@@ -1206,6 +1203,15 @@ function tickApplicationClock() {
     digits.textContent = formatCountdown(Math.max(0, DRILL_START_MS - now));
 
   } else if (stage === 'DURANTE_SIMULACRO') {
+    // Si el usuario tenía la app abierta desde el PRE y entró en DURANTE,
+    // enviamos 1 único APP_OPEN en etapa DURANTE_SIMULACRO para contabilizarlo como activo
+    if (!sessionStorage.getItem('dgot_logged_during')) {
+      sessionStorage.setItem('dgot_logged_during', 'true');
+      if (prevStage !== 'DURANTE_SIMULACRO') {
+        enqueueTelemetrySilent('APP_OPEN');
+      }
+    }
+
     if (prevStage !== 'DURANTE_SIMULACRO') {
       appState.alarmTriggeredOnce = false;
       requestScreenWakeLock();
@@ -1240,9 +1246,6 @@ function tickApplicationClock() {
     releaseScreenWakeLock();
     stopEmergencyAlarm();
     document.getElementById('modalDrillAlert').classList.remove('open');
-    if (prevStage !== 'POST_SIMULACRO') {
-      enqueueTelemetrySilent('DRILL_FINISHED_SUMMARY');
-    }
 
     banner.className = 'stage-pill stage-post';
     label.textContent = 'SIMULACRO FINALIZADO';
@@ -1254,8 +1257,55 @@ function tickApplicationClock() {
     postBanner.style.display = isCertificateUnlocked() ? 'flex' : 'none';
     document.getElementById('postSummaryTitle').textContent = '¡Evacuación Completada!';
     refreshPostStatsUI();
+
+  } else if (stage === 'CANCELADO') {
+    releaseScreenWakeLock();
+    stopEmergencyAlarm();
+    appState.stopwatchRunning = false;
+    document.getElementById('modalDrillAlert').classList.remove('open');
+
+    postBanner.style.display = 'none';
+    banner.className = 'stage-pill stage-canceled';
+    label.textContent = 'SIMULACRO SUSPENDIDO';
+    subtext.textContent = 'El ejercicio preventivo fue cancelado';
+    digits.textContent = 'CANCELADO';
+
+    const statusBox  = document.getElementById('statusBox');
+    const statusIcon = document.getElementById('statusIcon');
+    const titleEl    = document.getElementById('statusTitle');
+    const pillEl     = document.getElementById('statusDistancePill');
+    const descEl     = document.getElementById('statusDescription');
+
+    statusBox.className = 'status-banner status-outside';
+    statusIcon.textContent = '⚠️';
+    pillEl.style.display = 'none';
+    titleEl.textContent = 'Simulacro Cancelado';
+    descEl.textContent = 'El ejercicio de evacuación ha sido suspendido por razones operativas. No es necesario evacuar.';
   }
 }
+
+/*************************************************************************
+ * 9b. LOGO DE GOBIERNO COMPRIMIDO DURANTE EL SIMULACRO + AJUSTE DE CABECERA
+ *************************************************************************/
+function setGovLogoCompact(on) {
+  const img = document.getElementById('imgGobierno');
+  if (!img) return;
+  const target = on ? './logo_gobierno_compacto.png' : './logo_gobierno.png';
+  if (img.getAttribute('src') !== target) img.setAttribute('src', target);
+  img.classList.toggle('is-compact', on);
+}
+
+function fitMuteButtonLabel() {
+  const inner = document.querySelector('.tdf-header-inner');
+  const btn = document.getElementById('btnMuteAlarm');
+  if (!inner || !btn) return;
+  inner.classList.remove('mute-compact');
+  if (btn.classList.contains('visible') && inner.scrollWidth > inner.clientWidth) {
+    inner.classList.add('mute-compact');
+  }
+}
+
+window.addEventListener('resize', fitMuteButtonLabel);
 
 function showDrillAlertModal() {
   document.getElementById('modalDrillAlert').classList.add('open');
@@ -1484,15 +1534,21 @@ function buildWktLineString(track) {
   return `LINESTRING(${pairs})`;
 }
 
+const ALLOWED_MILESTONES = new Set([
+  'APP_OPEN',
+  'GPS_INITIAL_FIX',
+  'SAFE_ZONE_REACHED_FROM_EVAC'
+]);
+
 function enqueueTelemetrySilent(milestoneName) {
+  if (!ALLOWED_MILESTONES.has(milestoneName)) return;
+
   const queue = getSyncQueue();
   const timeFormatted = appState.stopwatchCompletedMs
     ? formatStopwatch(appState.stopwatchCompletedMs)
     : (appState.stopwatchStartMs ? formatStopwatch(Date.now() - appState.stopwatchStartMs) : '00:00:00');
 
-  const includeFullWkt =
-    milestoneName === 'SAFE_ZONE_REACHED_FROM_EVAC' ||
-    milestoneName === 'DRILL_FINISHED_SUMMARY';
+  const includeFullWkt = milestoneName === 'SAFE_ZONE_REACHED_FROM_EVAC';
 
   queue.push({
     queueType: 'TELEMETRY',
@@ -1588,12 +1644,21 @@ window.addEventListener('load', () => {
       appState.serverMode = 'AUTO';
       appState.serverStage = null;
     }
+    localStorage.removeItem(SYNC_QUEUE_KEY);
     resetStopwatch();
   }
 
-  enqueueTelemetrySilent('APP_OPEN');
-});
+  appState.currentStage = resolveCurrentStage(now);
+  if (appState.currentStage === 'DURANTE_SIMULACRO') {
+    sessionStorage.setItem('dgot_logged_during', 'true');
+  }
 
+  const openKey = `dgot_app_open_sent_${appState.currentStage}`;
+  if (!sessionStorage.getItem(openKey)) {
+    sessionStorage.setItem(openKey, 'true');
+    enqueueTelemetrySilent('APP_OPEN');
+  }
+});
 window.addEventListener('online', () => {
   flushSyncQueueSilent();
 });
@@ -1608,13 +1673,19 @@ setInterval(flushSyncQueueSilent, 30000);
 
 async function syncServerStatus() {
   if (!navigator.onLine || !appState.webhookUrl) return;
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 6500);
+
   try {
-    const resp = await fetch(`${appState.webhookUrl}?action=status`, { cache: 'no-store' });
+    const resp = await fetch(`${appState.webhookUrl}?action=status`, {
+      cache: 'no-store',
+      signal: controller.signal
+    });
     const data = await resp.json();
     if (!data || data.status !== 'ok') return;
 
     const validModes = ['AUTO', 'MANUAL'];
-    const validStages = ['PRE_SIMULACRO', 'DURANTE_SIMULACRO', 'POST_SIMULACRO'];
+    const validStages = ['PRE_SIMULACRO', 'DURANTE_SIMULACRO', 'POST_SIMULACRO', 'CANCELADO'];
     if (!validModes.includes(data.mode)) return;
 
     appState.serverMode = data.mode;
@@ -1632,10 +1703,15 @@ async function syncServerStatus() {
     }));
 
     tickApplicationClock();
-  } catch (_) {}
+  } catch (_) {
+  } finally {
+    clearTimeout(timeoutId);
+  }
 }
 
-setInterval(syncServerStatus, 10000);
+// Consultar cada 30 segundos en lugar de 10s para liberar la red móvil
+setInterval(syncServerStatus, 30000);
+
 window.addEventListener('online', syncServerStatus);
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible') syncServerStatus();
@@ -1750,6 +1826,10 @@ document.getElementById('btnAdminStart').addEventListener('click', () =>
 document.getElementById('btnAdminEnd').addEventListener('click', () =>
   adminSend('setStage', { stage: 'POST_SIMULACRO' }, '¿FINALIZAR el simulacro?'));
 
+document.getElementById('btnAdminCancel').addEventListener('click', () =>
+  adminSend('setStage', { stage: 'CANCELADO' },
+    '⚠️ ¿CANCELAR el simulacro en todos los dispositivos? Se detendrán las alarmas y se mostrará el aviso de suspensión.'));
+
 document.getElementById('btnAdminAuto').addEventListener('click', () =>
   adminSend('setAuto', {}, '¿Volver al modo automático por horario?'));
 
@@ -1766,7 +1846,7 @@ document.getElementById('btnCloseAdmin').addEventListener('click', () => {
 function openModal(id) {
   if (id === 'modalCert') renderCertificateCanvas();
   if (id === 'modalSearchStreet') {
-    captureVectorFeaturesIntoRAM();
+    captureStreetsIntoRAM();
     setTimeout(() => document.getElementById('streetSearchInput').focus(), 100);
   }
   document.getElementById(id).classList.add('open');

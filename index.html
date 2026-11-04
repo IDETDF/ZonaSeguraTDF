@@ -40,10 +40,9 @@
     <!-- 1. Cabecera Institucional -->
     <header class="tdf-header">
       <div class="tdf-header-inner">
-        <div class="tdf-brand" id="btnAdminUnlock" title="Gobierno de Tierra del Fuego">
-          <img src="./vortice.png" alt="Logo Tierra del Fuego" class="tdf-ring-logo" />
+        <div class="tdf-brand" id="btnAdminUnlock">
           <div class="tdf-brand-titles">
-            <span class="tdf-gob-label">Gobierno de <strong>Tierra del Fuego</strong></span>
+            <span class="tdf-zona-title">Zona Segura TDF</span>
             <span class="tdf-drill-label">
               <span class="drill-text-full">SIMULACRO DE EVACUACIÓN <br> ANTE SISMO Y TSUNAMI</span>
               <span class="drill-text-alarm">SIMULACRO DE EVACUACIÓN</span>
@@ -52,7 +51,10 @@
         </div>
 
         <div class="tdf-header-right">
-          <button id="btnMuteAlarm" class="btn-mute-alarm" type="button">🔕 Silenciar</button>
+          <button id="btnMuteAlarm" class="btn-mute-alarm" type="button" aria-label="Silenciar alarma">
+            <span aria-hidden="true">🔕</span><span class="btn-mute-text"> Silenciar</span>
+          </button>
+          <img id="imgGobierno" src="./logo_gobierno.png" alt="Gobierno de Tierra del Fuego" class="gob-logo" />
           <a href="https://ide.tierradelfuego.gob.ar/" target="_blank" rel="noopener noreferrer" class="idetdf-nav-link" title="Ir a IDETDF">
             <img src="./logo_completo.png" alt="IDETDF" class="idetdf-nav-logo" />
           </a>
@@ -121,6 +123,7 @@
             <button class="admin-btn" id="btnAdminPre" type="button">Pre-simulacro</button>
             <button class="admin-btn admin-btn-danger" id="btnAdminStart" type="button">▶ Iniciar simulacro</button>
             <button class="admin-btn" id="btnAdminEnd" type="button">■ Finalizar simulacro</button>
+            <button class="admin-btn admin-btn-cancel" id="btnAdminCancel" type="button">✖ Cancelar simulacro</button>
             <button class="admin-btn" id="btnAdminAuto" type="button">Modo automático</button>
           </div>
 
