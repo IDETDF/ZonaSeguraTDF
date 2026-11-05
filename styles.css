@@ -346,6 +346,8 @@ html, body {
   left: 0;
   width: 200%;
   height: 100%;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
   animation: waveSlide 6s linear infinite;
 }
 
@@ -367,8 +369,8 @@ html, body {
 }
 
 @keyframes waveSlide {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0%   { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
 }
 
 .flyer-rings-bg {

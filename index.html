@@ -14,11 +14,14 @@
   <link rel="icon" href="./logo.png" type="image/x-icon" />
   <link rel="apple-touch-icon" href="./logo.png" />
 
-  <!-- Preconexión a CDN de Google Fonts -->
+  <!-- Google Fonts no bloqueante -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
-
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" media="print" onload="this.media='all'" />
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" />
+  </noscript>
   <!-- Estilos base críticos primero -->
   <link rel="stylesheet" href="./styles.css" />
 

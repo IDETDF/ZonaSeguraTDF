@@ -104,9 +104,7 @@ try {
   const cSafeQgis = localStorage.getItem('dgot_ram_zona_segura_qgis');
   if (cEvac) appState.evacPolygonsRAM = JSON.parse(cEvac);
   if (cSafeQgis) appState.safePolygonsRAM = JSON.parse(cSafeQgis);
-} catch (e) {
-  console.warn('Error restaurando caché local:', e);
-}
+} catch (_) {}
 
 /**
  * Regla de negocio: El certificado SOLO se habilita si la persona fue desde
@@ -489,9 +487,7 @@ async function loadZonaSeguraGeoJsonIntoRAM() {
         localStorage.setItem('dgot_ram_zona_segura_qgis', JSON.stringify(features));
       } catch (_) {}
     }
-  } catch (err) {
-    console.warn('Error cargando ./zona_segura.geojson en RAM:', err);
-  }
+  } catch (_) {}
 }
 
 let idleCaptureTimeout = null;
@@ -912,9 +908,7 @@ async function toggleCompassOrientation() {
         alert('Se requiere permiso de sensores de orientación para girar el mapa con la brújula.');
         return;
       }
-    } catch (err) {
-      console.warn('Error solicitando permiso de brújula:', err);
-    }
+    } catch (_) {}
   }
 
   appState.compassActive = true;
@@ -2024,9 +2018,7 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js').then((reg) => {
       reg.update();
-    }).catch((err) => {
-      console.warn('Error registrando SW:', err);
-    });
+    }).catch(() => {});
   });
 
   let refreshing = false;
