@@ -7,13 +7,13 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="description" content="Aplicación web interactiva para el Simulacro de Evacuación ante Sismo y Tsunami en Ushuaia, Tierra del Fuego. Ubicá tu vía de escape y zona segura." />
   <title>Simulacro de evacuación ante Sismo/Tsunami | Gobierno de Tierra del Fuego</title>
 
   <link rel="manifest" href="./manifest.json" />
   <link rel="icon" href="./logo.png" type="image/x-icon" />
   <link rel="apple-touch-icon" href="./logo.png" />
 
-  <!-- Tipografías Institucionales -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
@@ -23,9 +23,6 @@
   <script src="./lib/maplibre-gl.js" onerror="this.src='https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js'"></script>
   <script src="./lib/pmtiles.js" onerror="this.src='https://unpkg.com/pmtiles@3.2.0/dist/pmtiles.js'"></script>
   <script src="./lib/turf.min.js" onerror="this.src='https://unpkg.com/@turf/turf@6.5.0/turf.min.js'"></script>
-
-  <!-- Google Identity Services (Solo para Admin) -->
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
 
   <!-- Hoja de Estilos -->
   <link rel="stylesheet" href="./styles.css" />
@@ -54,9 +51,9 @@
           <button id="btnMuteAlarm" class="btn-mute-alarm" type="button" aria-label="Silenciar alarma">
             <span aria-hidden="true">🔕</span><span class="btn-mute-text"> Silenciar</span>
           </button>
-          <img id="imgGobierno" src="./logo_gobierno.png" alt="Gobierno de Tierra del Fuego" class="gob-logo" />
+          <img id="imgGobierno" src="./logo_gobierno.png" alt="Gobierno de Tierra del Fuego" class="gob-logo" width="120" height="34" fetchpriority="high" />
           <a href="https://ide.tierradelfuego.gob.ar/" target="_blank" rel="noopener noreferrer" class="idetdf-nav-link" title="Ir a IDETDF">
-            <img src="./logo_completo.png" alt="IDETDF" class="idetdf-nav-logo" />
+            <img src="./logo_completo.png" alt="IDETDF" class="idetdf-nav-logo" width="95" height="34" />
           </a>
         </div>
       </div>

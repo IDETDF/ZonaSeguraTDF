@@ -542,8 +542,6 @@ function debouncedCaptureRAM() {
   idleCaptureTimeout = setTimeout(captureEvacPolygonIntoRAM, 600);
 }
 
-loadZonaSeguraGeoJsonIntoRAM();
-
 map.on('load', () => {
   loadZonaSeguraGeoJsonIntoRAM();
   captureEvacPolygonIntoRAM();
@@ -1782,7 +1780,19 @@ let adminIdToken = sessionStorage.getItem('dgot_admin_token');
 let gisReady = false;
 
 function initAdminLogin() {
-  if (!window.google || !google.accounts || !google.accounts.id) return;
+  if (!window.google || !google.accounts || !google.accounts.id) {
+    if (!document.getElementById('gsi-client-script')) {
+      const script = document.createElement('script');
+      script.id = 'gsi-client-script';
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.async = true;
+      script.defer = true;
+      script.onload = () => initAdminLogin();
+      document.head.appendChild(script);
+      return;
+    }
+    return;
+  }
 
   if (!gisReady) {
     google.accounts.id.initialize({
