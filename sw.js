@@ -3,7 +3,7 @@
  * Versión v2.2.0 - Arquitectura Modular (index.html + styles.css + app.js)
  */
 
-const CACHE_VERSION = 'dgot-evac-v3.5.1';
+const CACHE_VERSION = 'dgot-evac-v3.5.4';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const PMTILES_CACHE = `${CACHE_VERSION}-pmtiles`;
 const DYNAMIC_CACHE = `${CACHE_VERSION}-dynamic`;
@@ -15,13 +15,18 @@ const STATIC_ASSETS = [
   './app.js',
   './manifest.json',
   './vortice.png',
-  './logo.png',
-  './logo_completo.png',
+  './logo.webp',
+  './logo-32.png',
+  './logo-192.png',
+  './logo_completo.webp',
+  './logo_gobierno_compacto.webp',
+  './logo_gobierno.webp',
   './zona_segura.geojson',
+  './puntos_llegada.geojson',
   './lib/maplibre-gl.css',
   './lib/maplibre-gl.js',
   './lib/pmtiles.js',
-  './lib/turf.min.js',
+  './lib/turf-micro.js',
   './sprite/sprite.json',
   './sprite/sprite.png',
   './sprite/sprite@2x.json',
@@ -39,9 +44,7 @@ self.addEventListener('install', (event) => {
           if (response.ok) {
             await cache.put(asset, response);
           }
-        } catch (err) {
-          console.warn(`[SW] No se pudo precachear en install: ${asset}`, err);
-        }
+        } catch (_) {}
       }
     })
   );
@@ -65,25 +68,43 @@ self.addEventListener('fetch', (event) => {
 
   if (request.method !== 'GET') return;
 
-  // Solo http/https: ignora chrome-extension://, data:, blob:, etc.
+  // Solo http/https: ignora extensiones de navegador, blobs, esquemas de datos, etc.
   if (url.protocol !== 'http:' && url.protocol !== 'https:') return;
 
-  // Estado y API del simulacro: siempre a la red, nunca desde caché
+  // Telemetría y estado de Apps Script: siempre directo a la red, jamás cachear
   if (url.hostname === 'script.google.com' || url.hostname.endsWith('googleusercontent.com')) return;
 
-  // 1. Rangos PMTiles
+  // 1. Rangos PMTiles de mapas pesados
   if (url.pathname.endsWith('.pmtiles')) {
     event.respondWith(handlePmtilesRequest(request));
     return;
   }
 
-  // 2. Network-First para la app
+  // 2. Cache-First estricto para librerías cartográficas (/lib/)
+  // Evita el retraso de 10m de TTL de GitHub Pages respondiendo desde caché local
+  if (url.pathname.includes('/lib/')) {
+    event.respondWith(
+      caches.match(request).then((cached) => {
+        if (cached) return cached;
+        return fetch(request).then((networkResp) => {
+          if (!networkResp || networkResp.status !== 200) return networkResp;
+          const clone = networkResp.clone();
+          caches.open(STATIC_CACHE).then((cache) => cache.put(request, clone).catch(() => {}));
+          return networkResp;
+        });
+      })
+    );
+    return;
+  }
+
+  // 3. Network-First para código de interfaz (garantiza ver cambios al recargar con internet)
   const isAppShellCode =
     request.mode === 'navigate' ||
     url.pathname.endsWith('index.html') ||
     url.pathname.endsWith('styles.css') ||
     url.pathname.endsWith('app.js') ||
     url.pathname.endsWith('zona_segura.geojson') ||
+    url.pathname.endsWith('puntos_llegada.geojson') ||
     url.pathname.endsWith('/');
 
   if (isAppShellCode) {
@@ -99,7 +120,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 3. Cache-First para librerías, sprites y glifos
+  // 4. Cache-First para sprites, fuentes PBF, imágenes e íconos
   event.respondWith(
     caches.match(request).then((cachedResp) => {
       if (cachedResp) return cachedResp;
@@ -189,8 +210,7 @@ async function handlePmtilesRequest(request) {
       cache.put(rangeCacheKey, syntheticResponse);
     }
     return networkResponse;
-  } catch (err) {
-    console.error('[SW] Error leyendo rango PMTiles en modo offline:', request.url, rangeHeader);
+  } catch (_) {
     return new Response(null, { status: 504, statusText: 'Offline Range Miss' });
   }
 }
@@ -207,9 +227,7 @@ self.addEventListener('message', (event) => {
             if (resp.ok) {
               await cache.put(fileUrl, resp.clone());
             }
-          } catch (e) {
-            console.warn('[SW] No se pudo precachear archivo completo:', fileUrl, e);
-          }
+          } catch (_) {}
         }
         const allClients = await self.clients.matchAll();
         allClients.forEach((client) => client.postMessage({ type: 'PMTILES_CACHED_OK' }));

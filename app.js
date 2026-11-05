@@ -1282,7 +1282,7 @@ function tickApplicationClock() {
 function setGovLogoCompact(on) {
   const img = document.getElementById('imgGobierno');
   if (!img) return;
-  const target = on ? './logo_gobierno_compacto.png' : './logo_gobierno.png';
+  const target = on ? './logo_gobierno_compacto.webp' : './logo_gobierno.webp';
   if (img.getAttribute('src') !== target) img.setAttribute('src', target);
   img.classList.toggle('is-compact', on);
 }
