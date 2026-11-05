@@ -7,25 +7,30 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="description" content="Aplicación web interactiva para el Simulacro de Evacuación ante Sismo y Tsunami en Ushuaia, Tierra del Fuego. Ubicá tu vía de escape y zona segura." />
   <title>Simulacro de evacuación ante Sismo/Tsunami | Gobierno de Tierra del Fuego</title>
+  <meta name="description" content="Aplicación web interactiva para el Simulacro de Evacuación ante Sismo y Tsunami en Ushuaia, Tierra del Fuego. Ubicá tu vía de escape y zona segura." />
 
   <link rel="manifest" href="./manifest.json" />
   <link rel="icon" href="./logo.png" type="image/x-icon" />
   <link rel="apple-touch-icon" href="./logo.png" />
 
+  <!-- Preconexión a CDN de Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
 
-  <!-- Librerías Cartográficas Locales -->
-  <link rel="stylesheet" href="./lib/maplibre-gl.css" onerror="this.href='https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css'" />
-  <script src="./lib/maplibre-gl.js" onerror="this.src='https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js'"></script>
-  <script src="./lib/pmtiles.js" onerror="this.src='https://unpkg.com/pmtiles@3.2.0/dist/pmtiles.js'"></script>
-  <script src="./lib/turf.min.js" onerror="this.src='https://unpkg.com/@turf/turf@6.5.0/turf.min.js'"></script>
-
-  <!-- Hoja de Estilos -->
+  <!-- Estilos base críticos primero -->
   <link rel="stylesheet" href="./styles.css" />
+
+  <!-- CSS de MapLibre diferido (no bloquea el primer pintado FCP) -->
+  <link rel="stylesheet" href="./lib/maplibre-gl.css" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="./lib/maplibre-gl.css" /></noscript>
+
+  <!-- Scripts con DEFER estricto: se descargan en segundo plano sin pausar el parseo HTML -->
+  <script src="./lib/maplibre-gl.js" defer></script>
+  <script src="./lib/pmtiles.js" defer></script>
+  <script src="./lib/turf.min.js" defer></script>
+  <script src="./app.js" defer></script>
 </head>
 <body>
 
