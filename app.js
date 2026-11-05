@@ -1473,6 +1473,7 @@ document.getElementById('certNeighborhood').addEventListener('input', renderCert
 document.getElementById('btnDownloadCert').addEventListener('click', () => {
   if (!isCertificateUnlocked()) return;
   renderCertificateCanvas();
+  enqueueCertificateRecord('DOWNLOAD'); // Guarda en Google Sheets
   const canvas = document.getElementById('certCanvas');
   const link = document.createElement('a');
   link.download = `Constancia_Simulacro_Ushuaia_${Date.now()}.png`;
@@ -1483,6 +1484,7 @@ document.getElementById('btnDownloadCert').addEventListener('click', () => {
 document.getElementById('btnShareCert').addEventListener('click', async () => {
   if (!isCertificateUnlocked()) return;
   renderCertificateCanvas();
+  enqueueCertificateRecord('SHARE'); // Guarda en Google Sheets
   const canvas = document.getElementById('certCanvas');
   canvas.toBlob(async (blob) => {
     if (!blob) return;
@@ -1568,6 +1570,36 @@ function enqueueTelemetrySilent(milestoneName) {
     lng: appState.lastCoords ? appState.lastCoords[0] : '',
     wktTrack: includeFullWkt ? buildWktLineString(appState.trackCoords) : '',
     userAgent: navigator.userAgent,
+    synced: false
+  });
+
+  saveSyncQueue(queue);
+  flushSyncQueueSilent();
+}
+
+function enqueueCertificateRecord(actionTrigger) {
+  const name = (document.getElementById('certName')?.value || '').trim();
+  const neighborhood = (document.getElementById('certNeighborhood')?.value || '').trim();
+  const age = (document.getElementById('certAge')?.value || '').trim();
+  const gender = (document.getElementById('certGender')?.value || '').trim();
+
+  const timeFormatted = appState.stopwatchCompletedMs
+    ? formatStopwatch(appState.stopwatchCompletedMs)
+    : '00:00:00';
+
+  const queue = getSyncQueue();
+  queue.push({
+    queueType: 'CERTIFICATE',
+    id: `cert_${Date.now()}_${Math.random().toString(36).substring(2, 5)}`,
+    sessionId: appState.sessionId,
+    timestamp: new Date().toISOString(),
+    name,
+    neighborhood,
+    age,
+    gender,
+    evacuationTimeFormatted: timeFormatted,
+    distanceWalkedMeters: appState.distanceWalkedMeters,
+    actionTrigger, // 'DOWNLOAD' o 'SHARE'
     synced: false
   });
 

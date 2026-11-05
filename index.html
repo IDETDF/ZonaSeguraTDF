@@ -301,10 +301,28 @@
 
       <div class="form-field">
         <label for="certNeighborhood">Barrio o Institución (Opcional)</label>
-        <input type="text" id="certNeighborhood" class="input-clean" placeholder="Ej: Barrio Centro / Comercio" maxlength="42" />
+        <input type="text" id="certNeighborhood" class="input-clean" placeholder="Ej: Barrio Centro / Escuela 1" maxlength="42" />
       </div>
 
-      <div class="cert-canvas-box">
+      <!-- NUEVOS CAMPOS DEMOGRÁFICOS -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+        <div class="form-field">
+          <label for="certAge">Edad (Años)</label>
+          <input type="number" id="certAge" class="input-clean" placeholder="Ej: 34" min="1" max="115" />
+        </div>
+        <div class="form-field">
+          <label for="certGender">Sexo / Género</label>
+          <select id="certGender" class="input-clean">
+            <option value="">Seleccionar...</option>
+            <option value="Femenino">Femenino</option>
+            <option value="Masculino">Masculino</option>
+            <option value="No binario">No binario</option>
+            <option value="Otro / Prefiero no decir">Otro / No decir</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="cert-canvas-box" style="margin-top: 6px;">
         <canvas id="certCanvas" width="1080" height="1920"></canvas>
       </div>
 
