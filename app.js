@@ -2,7 +2,7 @@
  * 1. CONFIGURACIÓN GENERAL Y VENTANA DE 20 DÍAS DE LA OLA
  *************************************************************************/
 const DRILL_START_ISO = '2026-11-11T09:00:00-03:00';
-const DRILL_END_ISO   = '2026-11-11T10:30:00-03:00';
+const DRILL_END_ISO   = '2026-11-11T09:25:00-03:00';
 const DRILL_START_MS  = new Date(DRILL_START_ISO).getTime();
 const DRILL_END_MS    = new Date(DRILL_END_ISO).getTime();
 
@@ -1191,16 +1191,23 @@ function tickApplicationClock() {
     postBanner.style.display = 'none';
     banner.className = 'stage-pill';
     label.textContent = '11 NOV · 09:00 H · USHUAIA';
-    subtext.textContent = 'Tiempo restante para el simulacro';
-    digits.textContent = formatCountdown(Math.max(0, DRILL_START_MS - now));
+    
+    const remainingMs = DRILL_START_MS - now;
+    if (remainingMs > 0) {
+      subtext.textContent = 'Tiempo restante para el simulacro';
+      digits.textContent = formatCountdown(remainingMs);
+    } else {
+      subtext.textContent = 'Aguardando orden de inicio del COE';
+      digits.textContent = 'EN ESPERA...';
+    };
 
   } else if (stage === 'DURANTE_SIMULACRO') {
-    // Si el usuario tenía la app abierta desde el PRE y entró en DURANTE,
-    // enviamos 1 único APP_OPEN en etapa DURANTE_SIMULACRO para contabilizarlo como activo
+
     if (!sessionStorage.getItem('dgot_logged_during')) {
       sessionStorage.setItem('dgot_logged_during', 'true');
       if (prevStage !== 'DURANTE_SIMULACRO') {
-        enqueueTelemetrySilent('APP_OPEN');
+        const delayMs = 4000 + Math.floor(Math.random() * 31000);
+        setTimeout(() => enqueueTelemetrySilent('APP_OPEN'), delayMs);
       }
     }
 
@@ -1617,8 +1624,11 @@ async function flushSyncQueueSilent() {
     });
 
     if (resp.ok) {
-      const freshQueue = getSyncQueue().filter(item => !sentIds.has(item.id));
-      saveSyncQueue(freshQueue);
+      const data = await resp.json();
+      if (data && data.status === 'ok') {
+        const freshQueue = getSyncQueue().filter(item => !sentIds.has(item.id));
+        saveSyncQueue(freshQueue);
+      }
     }
   } catch (_) {
   } finally {
@@ -1733,8 +1743,23 @@ async function syncServerStatus() {
   }
 }
 
-// Consultar cada 30 segundos en lugar de 10s para liberar la red móvil
-setInterval(syncServerStatus, 30000);
+let serverSyncTimer = null;
+
+function scheduleNextServerSync() {
+  const now = Date.now();
+  const isDrillWindow = (now >= DRILL_START_MS - 30 * 60 * 1000 && now <= DRILL_END_MS + 30 * 60 * 1000);
+  
+  const baseMs = isDrillWindow ? 8000 : 45000;
+  const jitter = Math.floor(Math.random() * 4000) - 2000;
+
+  clearTimeout(serverSyncTimer);
+  serverSyncTimer = setTimeout(async () => {
+    await syncServerStatus();
+    scheduleNextServerSync();
+  }, Math.max(4000, baseMs + jitter));
+}
+
+scheduleNextServerSync();
 
 window.addEventListener('online', syncServerStatus);
 document.addEventListener('visibilitychange', () => {
