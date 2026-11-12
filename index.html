@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#062338" />
+  <title>Simulacro Finalizado | Gobierno de Tierra del Fuego</title>
+
+  <link rel="icon" href="./logo.webp" type="image/webp" sizes="32x32" />
+
+  <!-- Tipografías idénticas a la PWA original -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" />
+
+  <style>
+    :root {
+      --tdf-navy: #062338;
+      --tdf-navy-deep: #041726;
+      --tdf-charcoal: #263238;
+      --tdf-slate: #546e7a;
+      --tdf-white: #ffffff;
+      --tdf-surface-alt: #f4f7f9;
+      --tdf-border: #dce4ec;
+
+      --tdf-orange: #f5820b;
+      --tdf-orange-alert: #ea5b1b;
+      --tdf-green: #00a83f;
+      --tdf-blue: #0088ff;
+
+      --tdf-rainbow: linear-gradient(90deg, #ea5b1b 0%, #f5820b 32%, #00a83f 68%, #0088ff 100%);
+
+      --font-display: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100dvh;
+      background: radial-gradient(circle at top, #0a314d 0%, var(--tdf-navy-deep) 80%);
+      color: var(--tdf-white);
+      font-family: var(--font-sans);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ==========================================================================
+       1. CABECERA INSTITUCIONAL (RÉPLICA EXACTA DE styles.css)
+       ========================================================================== */
+    .tdf-header {
+      background: var(--tdf-white);
+      padding-top: var(--safe-top);
+      box-shadow: 0 2px 10px rgba(6, 35, 56, 0.14);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .tdf-header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 12px;
+      gap: 6px;
+    }
+
+    .tdf-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      user-select: none;
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .tdf-brand-titles {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .tdf-zona-title {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 0.92rem;
+      font-weight: 900;
+      color: var(--tdf-navy);
+      line-height: 1.1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tdf-drill-label {
+      font-size: 0.63rem;
+      font-weight: 800;
+      color: var(--tdf-orange-alert);
+      letter-spacing: 0.2px;
+      line-height: 1.15;
+    }
+
+    .tdf-header-right {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-shrink: 0;
+    }
+
+    .gob-logo {
+      height: 34px;
+      width: auto;
+      max-width: none;
+      display: block;
+      flex-shrink: 0;
+      object-fit: contain;
+    }
+
+    .idetdf-nav-link {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .idetdf-nav-logo {
+      height: 34px;
+      width: auto;
+      max-width: none;
+      object-fit: contain;
+      display: block;
+      transition: opacity 0.2s ease;
+    }
+
+    .idetdf-nav-link:hover .idetdf-nav-logo {
+      opacity: 0.85;
+    }
+
+    .tdf-rainbow-rule {
+      height: 4px;
+      width: 100%;
+      background: var(--tdf-rainbow);
+    }
+
+    /* ==========================================================================
+       2. TARJETA CENTRAL DE EJERCICIO CONCLUIDO
+       ========================================================================== */
+    .main-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px calc(24px + var(--safe-bottom));
+    }
+
+    .closure-card {
+      width: 100%;
+      max-width: 480px;
+      background: var(--tdf-navy);
+      border: 1.5px solid rgba(255, 255, 255, 0.14);
+      border-radius: 22px;
+      box-shadow: 0 22px 48px rgba(0, 0, 0, 0.48);
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .card-rainbow-top {
+      height: 5px;
+      width: 100%;
+      background: var(--tdf-rainbow);
+    }
+
+    .closure-body {
+      padding: 28px 24px 30px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 168, 63, 0.16);
+      border: 1px solid rgba(0, 168, 63, 0.4);
+      color: #6ee7b7;
+      font-family: var(--font-display);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 99px;
+      margin-bottom: 18px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #4ade80;
+      box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.25);
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: 1.42rem;
+      font-weight: 900;
+      color: var(--tdf-white);
+      line-height: 1.25;
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      font-size: 0.92rem;
+      color: #cbd5e1;
+      line-height: 1.45;
+      margin-bottom: 22px;
+    }
+
+    .info-box {
+      background: rgba(4, 23, 38, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      padding: 15px 16px;
+      margin-bottom: 22px;
+      font-size: 0.84rem;
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+
+    .info-box strong {
+      font-family: var(--font-display);
+      color: var(--tdf-white);
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.88rem;
+    }
+
+    .btn-primary-orange {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      background: var(--tdf-orange);
+      color: var(--tdf-white);
+      text-decoration: none;
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-family: var(--font-display);
+      font-size: 0.92rem;
+      font-weight: 800;
+      box-shadow: 0 6px 18px rgba(245, 130, 11, 0.34);
+      transition: background 0.2s ease, transform 0.15s ease;
+    }
+
+    .btn-primary-orange:hover {
+      background: var(--tdf-orange-alert);
+      transform: translateY(-1px);
+    }
+
+    .redirect-note {
+      margin-top: 16px;
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+
+    .redirect-note button {
+      background: none;
+      border: none;
+      color: #38bdf8;
+      text-decoration: underline;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-left: 4px;
+    }
+
+    .closure-footer {
+      background: rgba(4, 23, 38, 0.9);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 13px 16px;
+      font-size: 0.72rem;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. CABECERA INSTITUCIONAL (IDÉNTICA AL SISTEMA ORIGINAL) -->
+  <header class="tdf-header">
+    <div class="tdf-header-inner">
+      <div class="tdf-brand">
+        <div class="tdf-brand-titles">
+          <span class="tdf-zona-title">Zona Segura TDF</span>
+          <span class="tdf-drill-label">
+            SIMULACRO DE EVACUACIÓN <br> ANTE SISMO Y TSUNAMI
+          </span>
+        </div>
+      </div>
+
+      <div class="tdf-header-right">
+        <img 
+          src="./logo_gobierno.webp" 
+          alt="Gobierno de Tierra del Fuego" 
+          class="gob-logo" 
+          width="137" 
+          height="42" 
+        />
+        <a href="https://ide.tierradelfuego.gob.ar/" target="_blank" rel="noopener noreferrer" class="idetdf-nav-link" title="Ir a IDETDF">
+          <img 
+            src="./logo_completo.webp" 
+            alt="IDETDF" 
+            class="idetdf-nav-logo" 
+            width="52" 
+            height="42" 
+          />
+        </a>
+      </div>
+    </div>
+    <div class="tdf-rainbow-rule"></div>
+  </header>
+
+  <!-- 2. CONTENIDO DE CIERRE -->
+  <main class="main-wrapper">
+    <section class="closure-card">
+      <div class="card-rainbow-top"></div>
+
+      <div class="closure-body">
+        <div class="status-badge">
+          <span class="status-dot"></span>
+          Ejercicio Concluido
+        </div>
+
+        <h1>Simulacro ante Sismo y Tsunami Finalizado</h1>
+
+        <p class="subtitle">
+          Agradecemos a todos los vecinos, vecinas e instituciones de Ushuaia por su compromiso y participación activa en el ejercicio preventivo.
+        </p>
+
+        <div class="info-box">
+          <strong>Infraestructura de Datos Espaciales (IDETDF)</strong>
+          Podés continuar consultando la cartografía oficial, información territorial y visitando el geoportal de la provincia en nuestra plataforma principal.
+        </div>
+
+        <a href="https://ide.tierradelfuego.gob.ar/" class="btn-primary-orange">
+          Ir a IDETDF →
+        </a>
+
+        <p class="redirect-note" id="redirectStatus">
+          Redirigiendo automáticamente en <strong id="secLeft">10</strong> segundos…
+          <button type="button" id="btnCancelRedirect">Permanecer aquí</button>
+        </p>
+      </div>
+
+      <footer class="closure-footer">
+        Dirección General de Ordenamiento Territorial · Subsecretaría de Planificación Estratégica · Gobierno de Tierra del Fuego Antártida e Islas del Atlántico Sur
+      </footer>
+    </section>
+  </main>
+
+  <script>
+    // 1. Purga activa de Service Workers y cachés offline de la versión anterior
+    (async function purgeOldPwaCache() {
+      try {
+        if ('serviceWorker' in navigator) {
+          await navigator.serviceWorker.register('./sw.js');
+          const regs = await navigator.serviceWorker.getRegistrations();
+          for (const reg of regs) {
+            await reg.unregister();
+          }
+        }
+        if ('caches' in window) {
+          const keys = await caches.keys();
+          await Promise.all(keys.map((k) => caches.delete(k)));
+        }
+      } catch (_) {}
+    })();
+
+    // 2. Redirección automática a IDETDF con opción de cancelar
+    const IDE_URL = 'https://ide.tierradelfuego.gob.ar/';
+    let seconds = 10;
+    const secEl = document.getElementById('secLeft');
+    const statusEl = document.getElementById('redirectStatus');
+    const cancelBtn = document.getElementById('btnCancelRedirect');
+
+    const countdownTimer = setInterval(() => {
+      seconds--;
+      if (secEl) secEl.textContent = String(Math.max(0, seconds));
+      if (seconds <= 0) {
+        clearInterval(countdownTimer);
+        window.location.replace(IDE_URL);
+      }
+    }, 1000);
+
+    cancelBtn.addEventListener('click', () => {
+      clearInterval(countdownTimer);
+      statusEl.textContent = 'Redirección automática cancelada.';
+    });
+  </script>
+
+</body>
+</html>
